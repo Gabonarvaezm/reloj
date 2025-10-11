@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vintage World Clocks - Enhanced</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+<body>
+    <div class="container" id="mainContainer">
+        <header class="header">
+            <h1 class="title">El tiempo del mundo</h1>
+            <p class="subtitle">el tiempo en otros lados</p>
+        </header>
+
+        <!-- Feature tabs navigation -->
+        <div class="feature-tabs">
+            <button class="tab-btn active" data-tab="clocks">
+                <span class="tab-icon"></span>
+                Relojes
+            </button>
+            <button class="tab-btn" data-tab="compare">
+                <span class="tab-icon"></span>
+                Comparar
+            </button>
+            <button class="tab-btn" data-tab="meeting">
+                <span class="tab-icon"></span>
+                Reuniones
+            </button>
+            <button class="tab-btn" data-tab="convert">
+                <span class="tab-icon"></span>
+                Convertir
+            </button>
+            <button class="tab-btn" data-tab="structure">
+                <span class="tab-icon"></span>
+                Estructura
+            </button>
+        </div>
+
+        <!-- Main clocks view with carousel navigation -->
+        <div class="tab-content active" id="clocks-tab">
+            <!-- Carousel navigation buttons -->
+            <div class="carousel-navigation">
+                <button class="carousel-btn prev-btn" onclick="navigatePrevious()">
+                    <span class="btn-icon">←</span>
+                    <span class="btn-text">Anterior</span>
+                </button>
+                
+                <div class="carousel-indicator">
+                    <span id="currentIndex">1</span> / <span id="totalClocks">3</span>
+                </div>
+                
+                <button class="carousel-btn next-btn" onclick="navigateNext()">
+                    <span class="btn-text">Siguiente</span>
+                    <span class="btn-icon">→</span>
+                </button>
+            </div>
+
+            <!-- Single clock display container -->
+            <div class="carousel-container">
+                <div class="single-clock-display" id="singleClockDisplay">
+                    <!-- Clock will be dynamically loaded here -->
+                </div>
+            </div>
+
+            <!-- Added time adjustment controls -->
+            <div class="time-adjustment-panel">
+                <h3 class="adjustment-title"> Ajustar Hora del Reloj</h3>
+                <p class="adjustment-description">Modifica manualmente la hora de este reloj</p>
+                
+                <div class="adjustment-controls">
+                    <div class="adjustment-group">
+                        <label>Horas</label>
+                        <div class="adjustment-buttons">
+                            <button class="adjust-btn" onclick="adjustTime(-1, 0)">-1h</button>
+                            <button class="adjust-btn" onclick="adjustTime(1, 0)">+1h</button>
+                            <button class="adjust-btn" onclick="adjustTime(-3, 0)">-3h</button>
+                            <button class="adjust-btn" onclick="adjustTime(3, 0)">+3h</button>
+                        </div>
+                    </div>
+                    
+                    <div class="adjustment-group">
+                        <label>Minutos</label>
+                        <div class="adjustment-buttons">
+                            <button class="adjust-btn" onclick="adjustTime(0, -15)">-15m</button>
+                            <button class="adjust-btn" onclick="adjustTime(0, 15)">+15m</button>
+                            <button class="adjust-btn" onclick="adjustTime(0, -30)">-30m</button>
+                            <button class="adjust-btn" onclick="adjustTime(0, 30)">+30m</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="adjustment-status" id="adjustmentStatus"></div>
+                
+                <button class="reset-btn" onclick="resetClockTime()">
+                     Restaurar Hora Original
+                </button>
+            </div>
+
+            <!-- Circular list explanation -->
+            <div class="carousel-info">
+                <p> <strong>Lista Circular Doble:</strong> Navega infinitamente en ambas direcciones</p>
+                <p>El último reloj conecta con el primero (circular) y puedes ir hacia atrás (doble enlace)</p>
+            </div>
+        </div>
+
+        <!-- Timezone comparison tool -->
+        <div class="tab-content" id="compare-tab">
+            <div class="tool-container">
+                <h2 class="tool-title">Comparador de Zonas Horarias</h2>
+                <p class="tool-description">Compara las diferencias de tiempo entre dos ciudades</p>
+                
+                <div class="comparison-controls">
+                    <div class="select-group">
+                        <label>Primera Ciudad</label>
+                        <select id="compare-clock1" class="vintage-select">
+                            <option value="0">Colombia</option>
+                            <option value="1">United Kingdom</option>
+                            <option value="2">China</option>
+                        </select>
+                    </div>
+                    
+                    <div class="comparison-arrow">⟷</div>
+                    
+                    <div class="select-group">
+                        <label>Segunda Ciudad</label>
+                        <select id="compare-clock2" class="vintage-select">
+                            <option value="0">Colombia</option>
+                            <option value="1" selected>United Kingdom</option>
+                            <option value="2">China</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button class="vintage-btn" onclick="compareTimezones()">Comparar</button>
+                
+                <div id="comparison-result" class="result-box"></div>
+            </div>
+        </div>
+
+        <!-- Meeting time finder -->
+        <div class="tab-content" id="meeting-tab">
+            <div class="tool-container">
+                <h2 class="tool-title">Buscador de Horarios de Reunión</h2>
+                <p class="tool-description">Encuentra el mejor momento para reuniones entre todas las zonas horarias</p>
+                
+                <div class="meeting-controls">
+                    <div class="time-range">
+                        <label>Horario laboral (horas)</label>
+                        <div class="range-inputs">
+                            <input type="number" id="meeting-start" value="9" min="0" max="23" class="vintage-input">
+                            <span>a</span>
+                            <input type="number" id="meeting-end" value="17" min="0" max="23" class="vintage-input">
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="vintage-btn" onclick="findMeetingTimes()">Buscar Horarios</button>
+                
+                <div id="meeting-result" class="result-box"></div>
+            </div>
+        </div>
+
+        <!-- Time converter -->
+        <div class="tab-content" id="convert-tab">
+            <div class="tool-container">
+                <h2 class="tool-title">Convertidor de Tiempo</h2>
+                <p class="tool-description">Convierte una hora específica entre zonas horarias</p>
+                
+                <div class="converter-controls">
+                    <div class="select-group">
+                        <label>Desde</label>
+                        <select id="convert-from" class="vintage-select">
+                            <option value="0">Colombia</option>
+                            <option value="1">United Kingdom</option>
+                            <option value="2">China</option>
+                        </select>
+                    </div>
+                    
+                    <div class="time-input-group">
+                        <label>Hora</label>
+                        <div class="time-inputs">
+                            <input type="number" id="convert-hour" value="12" min="0" max="23" class="vintage-input">
+                            <span>:</span>
+                            <input type="number" id="convert-minute" value="0" min="0" max="59" class="vintage-input">
+                        </div>
+                    </div>
+                    
+                    <div class="select-group">
+                        <label>Hacia</label>
+                        <select id="convert-to" class="vintage-select">
+                            <option value="0">Colombia</option>
+                            <option value="1" selected>United Kingdom</option>
+                            <option value="2">China</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button class="vintage-btn" onclick="convertTime()">Convertir</button>
+                
+                <div id="convert-result" class="result-box"></div>
+            </div>
+        </div>
+
+        <!-- Circular list structure visualizer -->
+        <div class="tab-content" id="structure-tab">
+            <div class="tool-container">
+                <h2 class="tool-title">Visualizador de Lista Circular Doble</h2>
+                <p class="tool-description">Estructura de datos utilizada en este proyecto</p>
+                
+                <div id="structure-visualization" class="structure-viz">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+                
+                <div class="structure-info">
+                    <h3>Sobre la Estructura de Datos</h3>
+                    <ul class="info-list">
+                        <li><strong>Tipo:</strong> Lista Circular Doblemente Enlazada</li>
+                        <li><strong>Ventajas:</strong> Navegación bidireccional, sin nodos finales</li>
+                        <li><strong>Uso:</strong> Gestión eficiente de zonas horarias conectadas</li>
+                        <li><strong>Complejidad:</strong> O(1) para inserción, O(n) para búsqueda</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>desarrollado con python y listas circulares dobles</p>
+            <p class="footer-enhanced"> Enhanced with carousel navigation, time adjustment & advanced timezone tools</p>
+        </footer>
+    </div>
+
+    <script>
+        // ============================================
+        // CAROUSELNAVIGATION LOGIC
+        // ============================================
+
+        let currentTheme = 'day';
+        let currentClockData = null;
+        let isNavigating = false;
+        let currentTimeOffset = { hours: 0, minutes: 0 };
+
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabName = btn.dataset.tab;
+                switchTab(tabName);
+            });
+        });
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+            
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+            
+            if (tabName === 'structure') {
+                loadStructureVisualization();
+            }
+        }
+
+        async function fetchCurrentClock() {
+            try {
+                const response = await fetch('/api/clock/current');
+                const data = await response.json();
+                
+                currentClockData = data.clock;
+                currentTimeOffset = {
+                    hours: data.clock.offset_hours || 0,
+                    minutes: data.clock.offset_minutes || 0
+                };
+                updateTheme(data.theme);
+                renderSingleClock(data.clock);
+                updateCarouselIndicator(data.index + 1, data.total);
+                updateAdjustmentStatus(data.clock);
+            } catch (error) {
+                console.error('Error fetching current clock:', error);
+            }
+        }
+
+        async function navigateNext() {
+            if (isNavigating) return;
+            isNavigating = true;
+            
+            try {
+                const response = await fetch('/api/clock/next');
+                const data = await response.json();
+                
+                currentClockData = data.clock;
+                currentTimeOffset = {
+                    hours: data.clock.offset_hours || 0,
+                    minutes: data.clock.offset_minutes || 0
+                };
+                updateTheme(data.theme);
+                animateClockTransition(data.clock, 'next');
+                updateCarouselIndicator(data.index + 1, data.total);
+                updateAdjustmentStatus(data.clock);
+            } catch (error) {
+                console.error('Error navigating to next clock:', error);
+            } finally {
+                setTimeout(() => { isNavigating = false; }, 500);
+            }
+        }
+
+        async function navigatePrevious() {
+            if (isNavigating) return;
+            isNavigating = true;
+            
+            try {
+                const response = await fetch('/api/clock/previous');
+                const data = await response.json();
+                
+                currentClockData = data.clock;
+                currentTimeOffset = {
+                    hours: data.clock.offset_hours || 0,
+                    minutes: data.clock.offset_minutes || 0
+                };
+                updateTheme(data.theme);
+                animateClockTransition(data.clock, 'previous');
+                updateCarouselIndicator(data.index + 1, data.total);
+                updateAdjustmentStatus(data.clock);
+            } catch (error) {
+                console.error('Error navigating to previous clock:', error);
+            } finally {
+                setTimeout(() => { isNavigating = false; }, 500);
+            }
+        }
+
+        async function adjustTime(hoursChange, minutesChange) {
+            const newHours = currentTimeOffset.hours + hoursChange;
+            const newMinutes = currentTimeOffset.minutes + minutesChange;
+            
+            try {
+                const response = await fetch('/api/clock/update-time', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        index: parseInt(document.getElementById('currentIndex').textContent) - 1,
+                        hours: newHours,
+                        minutes: newMinutes
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    currentClockData = data.clock;
+                    currentTimeOffset = {
+                        hours: data.clock.offset_hours,
+                        minutes: data.clock.offset_minutes
+                    };
+                    updateTheme(data.theme);
+                    renderSingleClock(data.clock);
+                    updateAdjustmentStatus(data.clock);
+                }
+            } catch (error) {
+                console.error('Error adjusting time:', error);
+            }
+        }
+
+        async function resetClockTime() {
+            try {
+                const response = await fetch('/api/clock/reset-time', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        index: parseInt(document.getElementById('currentIndex').textContent) - 1
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    currentClockData = data.clock;
+                    currentTimeOffset = { hours: 0, minutes: 0 };
+                    updateTheme(data.theme);
+                    renderSingleClock(data.clock);
+                    updateAdjustmentStatus(data.clock);
+                }
+            } catch (error) {
+                console.error('Error resetting time:', error);
+            }
+        }
+
+        function updateAdjustmentStatus(clockData) {
+            const statusDiv = document.getElementById('adjustmentStatus');
+            
+            if (clockData.is_modified) {
+                const offsetText = formatOffset(clockData.offset_hours, clockData.offset_minutes);
+                statusDiv.innerHTML = `
+                    <div class="status-modified">
+                        ⚠️ <strong>Hora Modificada:</strong> ${offsetText}
+                    </div>
+                `;
+                statusDiv.style.display = 'block';
+            } else {
+                statusDiv.innerHTML = `
+                    <div class="status-original">
+                        Mostrando hora original de la zona horaria
+                    </div>
+                `;
+                statusDiv.style.display = 'block';
+            }
+        }
+
+        function formatOffset(hours, minutes) {
+            const parts = [];
+            if (hours !== 0) {
+                parts.push(`${hours > 0 ? '+' : ''}${hours}h`);
+            }
+            if (minutes !== 0) {
+                parts.push(`${minutes > 0 ? '+' : ''}${minutes}m`);
+            }
+            return parts.join(' ') || 'Sin ajuste';
+        }
+
+        function animateClockTransition(clockData, direction) {
+            const container = document.getElementById('singleClockDisplay');
+            
+            // Add exit animation
+            container.classList.add(direction === 'next' ? 'slide-out-left' : 'slide-out-right');
+            
+            setTimeout(() => {
+                renderSingleClock(clockData);
+                container.classList.remove('slide-out-left', 'slide-out-right');
+                container.classList.add(direction === 'next' ? 'slide-in-right' : 'slide-in-left');
+                
+                setTimeout(() => {
+                    container.classList.remove('slide-in-right', 'slide-in-left');
+                }, 500);
+            }, 300);
+        }
+
+        function renderSingleClock(clockData) {
+            const container = document.getElementById('singleClockDisplay');
+            
+            const timeMode = clockData.is_day ? 'Daytime' : 'Nighttime';
+            const timeModeClass = clockData.is_day ? 'day-mode' : 'night-mode';
+            const modifiedBadge = clockData.is_modified ? '<span class="modified-badge">✏️ Modificado</span>' : '';
+
+            container.innerHTML = `
+                <div class="clock-card-large">
+                    <div class="clock-header">
+                        <h2 class="city-name">${clockData.city}</h2>
+                        <div class="clock-badges">
+                            <span class="time-mode ${timeModeClass}">${timeMode}</span>
+                            ${modifiedBadge}
+                        </div>
+                    </div>
+                    
+                    <div class="clock-face-container">
+                        <div class="clock-face-large">
+                            <div class="clock-background" style="background-image: url('/static/images/${clockData.image}')"></div>
+                            
+                            <div class="hand hour-hand" id="hourHand" style="transform: rotate(${clockData.hour_angle}deg)"></div>
+                            <div class="hand minute-hand" id="minuteHand" style="transform: rotate(${clockData.minute_angle}deg)"></div>
+                            <div class="hand second-hand" id="secondHand" style="transform: rotate(${clockData.second_angle}deg)"></div>
+                            
+                            <div class="center-dot"></div>
+                        </div>
+                    </div>
+
+                    <div class="digital-time-large">
+                        ${formatTime(clockData.hour)}:${formatTime(clockData.minute)}:${formatTime(clockData.second)}
+                    </div>
+
+                    <div class="timezone-info-large">
+                        ${clockData.timezone}
+                    </div>
+
+                    <div class="clock-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Fecha:</span>
+                            <span class="detail-value">${clockData.date || 'N/A'}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Día:</span>
+                            <span class="detail-value">${clockData.day_of_week || 'N/A'}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateCarouselIndicator(current, total) {
+            document.getElementById('currentIndex').textContent = current;
+            document.getElementById('totalClocks').textContent = total;
+        }
+
+        function updateClockHands() {
+            if (!currentClockData) return;
+            
+            // Increment seconds
+            currentClockData.second++;
+            if (currentClockData.second >= 60) {
+                currentClockData.second = 0;
+                currentClockData.minute++;
+                if (currentClockData.minute >= 60) {
+                    currentClockData.minute = 0;
+                    currentClockData.hour++;
+                    if (currentClockData.hour >= 24) {
+                        currentClockData.hour = 0;
+                    }
+                }
+            }
+            
+            // Recalculate angles
+            const hourAngle = (currentClockData.hour % 12) * 30 + currentClockData.minute * 0.5;
+            const minuteAngle = currentClockData.minute * 6;
+            const secondAngle = currentClockData.second * 6;
+            
+            // Update hands
+            const hourHand = document.getElementById('hourHand');
+            const minuteHand = document.getElementById('minuteHand');
+            const secondHand = document.getElementById('secondHand');
+            
+            if (hourHand) hourHand.style.transform = `rotate(${hourAngle}deg)`;
+            if (minuteHand) minuteHand.style.transform = `rotate(${minuteAngle}deg)`;
+            if (secondHand) secondHand.style.transform = `rotate(${secondAngle}deg)`;
+            
+            // Update digital time
+            const digitalTime = document.querySelector('.digital-time-large');
+            if (digitalTime) {
+                digitalTime.textContent = `${formatTime(currentClockData.hour)}:${formatTime(currentClockData.minute)}:${formatTime(currentClockData.second)}`;
+            }
+        }
+
+        function updateTheme(theme) {
+            if (theme !== currentTheme) {
+                currentTheme = theme;
+                const container = document.getElementById('mainContainer');
+                container.className = `container theme-${theme}`;
+            }
+        }
+
+        function formatTime(value) {
+            return value.toString().padStart(2, '0');
+        }
+
+        // ============================================
+        // TOOL FUNCTIONS (unchanged)
+        // ============================================
+
+        async function compareTimezones() {
+            const clock1 = document.getElementById('compare-clock1').value;
+            const clock2 = document.getElementById('compare-clock2').value;
+            
+            try {
+                const response = await fetch(`/api/compare?clock1=${clock1}&clock2=${clock2}`);
+                const data = await response.json();
+                
+                const resultDiv = document.getElementById('comparison-result');
+                resultDiv.innerHTML = `
+                    <div class="comparison-card">
+                        <h3>${data.clock1} vs ${data.clock2}</h3>
+                        <div class="time-difference">
+                            <span class="difference-value">${data.difference_text}</span>
+                        </div>
+                        <p class="difference-detail">
+                            ${data.clock2} está ${data.difference_text} de ${data.clock1}
+                        </p>
+                    </div>
+                `;
+                resultDiv.style.display = 'block';
+            } catch (error) {
+                console.error('Error comparing timezones:', error);
+            }
+        }
+
+        async function findMeetingTimes() {
+            const start = document.getElementById('meeting-start').value;
+            const end = document.getElementById('meeting-end').value;
+            
+            try {
+                const response = await fetch(`/api/meeting-times?start=${start}&end=${end}`);
+                const data = await response.json();
+                
+                const resultDiv = document.getElementById('meeting-result');
+                
+                if (data.optimal_times.length === 0) {
+                    resultDiv.innerHTML = `
+                        <div class="no-results">
+                            <p> No se encontraron horarios óptimos en el rango especificado</p>
+                            <p>Intenta ampliar el rango de horas</p>
+                        </div>
+                    `;
+                } else {
+                    let html = `
+                        <div class="meeting-results">
+                            <h3> ${data.total_options} horarios óptimos encontrados</h3>
+                            <div class="meeting-times-grid">
+                    `;
+                    
+                    data.optimal_times.slice(0, 6).forEach(slot => {
+                        html += `
+                            <div class="meeting-slot">
+                                <h4>Opción ${slot.reference_hour}:00</h4>
+                                ${slot.times.map(t => `
+                                    <div class="meeting-time-item">
+                                        <span class="city-name">${t.city}:</span>
+                                        <span class="time-value">${t.time}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        `;
+                    });
+                    
+                    html += `</div></div>`;
+                    resultDiv.innerHTML = html;
+                }
+                
+                resultDiv.style.display = 'block';
+            } catch (error) {
+                console.error('Error finding meeting times:', error);
+            }
+        }
+
+        async function convertTime() {
+            const from = document.getElementById('convert-from').value;
+            const to = document.getElementById('convert-to').value;
+            const hour = document.getElementById('convert-hour').value;
+            const minute = document.getElementById('convert-minute').value;
+            
+            try {
+                const response = await fetch(`/api/convert?from=${from}&to=${to}&hour=${hour}&minute=${minute}`);
+                const data = await response.json();
+                
+                const resultDiv = document.getElementById('convert-result');
+                resultDiv.innerHTML = `
+                    <div class="conversion-card">
+                        <div class="conversion-row">
+                            <div class="conversion-item">
+                                <h4>${data.from_city}</h4>
+                                <div class="converted-time">${data.source_time}</div>
+                            </div>
+                            <div class="conversion-arrow">→</div>
+                            <div class="conversion-item">
+                                <h4>${data.to_city}</h4>
+                                <div class="converted-time">${data.target_time}</div>
+                            </div>
+                        </div>
+                        ${data.date_change ? '<p class="date-warning">⚠️ Cambio de fecha</p>' : ''}
+                    </div>
+                `;
+                resultDiv.style.display = 'block';
+            } catch (error) {
+                console.error('Error converting time:', error);
+            }
+        }
+
+        async function loadStructureVisualization() {
+            try {
+                const response = await fetch('/api/structure');
+                const data = await response.json();
+                
+                const vizDiv = document.getElementById('structure-visualization');
+                
+                let html = `
+                    <div class="structure-header">
+                        <h3>${data.data_structure}</h3>
+                        <p>Total de nodos: ${data.total_nodes}</p>
+                    </div>
+                    <div class="circular-list">
+                `;
+                
+                data.structure.forEach((node, index) => {
+                    html += `
+                        <div class="list-node ${node.is_head ? 'head-node' : ''}">
+                            <div class="node-content">
+                                <div class="node-label">${node.is_head ? 'HEAD' : 'Node ' + index}</div>
+                                <div class="node-city">${node.city}</div>
+                            </div>
+                            <div class="node-connections">
+                                <div class="connection prev">← ${node.previous}</div>
+                                <div class="connection next">${node.next} →</div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    if (index < data.structure.length - 1) {
+                        html += '<div class="connection-line">⟷</div>';
+                    }
+                });
+                
+                html += `
+                        <div class="circular-indicator">
+                            <div class="circular-arrow">↻</div>
+                            <p>Lista Circular: El último nodo conecta con el primero</p>
+                        </div>
+                    </div>
+                `;
+                
+                vizDiv.innerHTML = html;
+            } catch (error) {
+                console.error('Error loading structure:', error);
+            }
+        }
+
+        function init() {
+            fetchCurrentClock();
+            // Update clock hands every second
+            setInterval(updateClockHands, 1000);
+            // Refresh from server every 60 seconds to stay in sync
+            setInterval(fetchCurrentClock, 60000);
+        }
+
+        window.addEventListener('DOMContentLoaded', init);
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                navigatePrevious();
+            } else if (e.key === 'ArrowRight') {
+                navigateNext();
+            }
+        });
+    </script>
+</body>
+</html>
