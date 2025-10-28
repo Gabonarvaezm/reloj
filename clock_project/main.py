@@ -6,7 +6,7 @@ import math
 app = Flask(__name__)
 
 # ============================================
-# DOUBLY CIRCULAR LINKED LIST IMPLEMENTATION
+# IMPLEMENTACION DE LISTAS CIRCULARES DOBLES
 # ============================================
 
 class ClockNode:
