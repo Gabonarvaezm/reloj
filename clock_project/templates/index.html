@@ -13,7 +13,7 @@
             <p class="subtitle">el tiempo en otros lados</p>
         </header>
 
-        <!-- Feature tabs navigation -->
+       
         <div class="feature-tabs">
             <button class="tab-btn active" data-tab="clocks">
                 <span class="tab-icon"></span>
@@ -37,7 +37,6 @@
             </button>
         </div>
 
-        <!-- Main clocks view with carousel navigation -->
         <div class="tab-content active" id="clocks-tab">
             <!-- Carousel navigation buttons -->
             <div class="carousel-navigation">
@@ -56,14 +55,13 @@
                 </button>
             </div>
 
-            <!-- Single clock display container -->
             <div class="carousel-container">
                 <div class="single-clock-display" id="singleClockDisplay">
-                    <!-- Clock will be dynamically loaded here -->
+                   
                 </div>
             </div>
 
-            <!-- Added time adjustment controls -->
+            
             <div class="time-adjustment-panel">
                 <h3 class="adjustment-title"> Ajustar Hora del Reloj</h3>
                 <p class="adjustment-description">Modifica manualmente la hora de este reloj</p>
@@ -97,14 +95,14 @@
                 </button>
             </div>
 
-            <!-- Circular list explanation -->
+         
             <div class="carousel-info">
                 <p> <strong>Lista Circular Doble:</strong> Navega infinitamente en ambas direcciones</p>
                 <p>El último reloj conecta con el primero (circular) y puedes ir hacia atrás (doble enlace)</p>
             </div>
         </div>
 
-        <!-- Timezone comparison tool -->
+     
         <div class="tab-content" id="compare-tab">
             <div class="tool-container">
                 <h2 class="tool-title">Comparador de Zonas Horarias</h2>
@@ -138,7 +136,7 @@
             </div>
         </div>
 
-        <!-- Meeting time finder -->
+      
         <div class="tab-content" id="meeting-tab">
             <div class="tool-container">
                 <h2 class="tool-title">Buscador de Horarios de Reunión</h2>
@@ -202,14 +200,14 @@
             </div>
         </div>
 
-        <!-- Circular list structure visualizer -->
+       
         <div class="tab-content" id="structure-tab">
             <div class="tool-container">
                 <h2 class="tool-title">Visualizador de Lista Circular Doble</h2>
                 <p class="tool-description">Estructura de datos utilizada en este proyecto</p>
                 
                 <div id="structure-visualization" class="structure-viz">
-                    <!-- Will be populated by JavaScript -->
+                  
                 </div>
                 
                 <div class="structure-info">
@@ -232,7 +230,7 @@
 
     <script>
         // ============================================
-        // CAROUSELNAVIGATION LOGIC
+        // NAVEGACION EN CARRUSEL
         // ============================================
 
         let currentTheme = 'day';
@@ -545,9 +543,7 @@
             return value.toString().padStart(2, '0');
         }
 
-        // ============================================
-        // TOOL FUNCTIONS (unchanged)
-        // ============================================
+       
 
         async function compareTimezones() {
             const clock1 = document.getElementById('compare-clock1').value;
@@ -706,9 +702,9 @@
 
         function init() {
             fetchCurrentClock();
-            // Update clock hands every second
+           
             setInterval(updateClockHands, 1000);
-            // Refresh from server every 60 seconds to stay in sync
+            
             setInterval(fetchCurrentClock, 60000);
         }
 

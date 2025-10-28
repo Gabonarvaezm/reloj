@@ -10,10 +10,7 @@ app = Flask(__name__)
 # ============================================
 
 class ClockNode:
-    """
-    Node representing a clock/timezone in the circular list.
-    Each node contains timezone info and links to next/previous clocks.
-    """
+    
     def __init__(self, city_name, timezone_str, image_filename):
         self.city_name = city_name
         self.timezone_str = timezone_str
@@ -80,21 +77,17 @@ class ClockNode:
     
     @staticmethod
     def calculate_second_angle(time):
-        """Calculate second hand angle (0-360 degrees)"""
+        
         return time.second * 6
 
 
 class CircularClockList:
-    """
-    Doubly Circular Linked List to manage multiple timezone clocks.
-    Each clock node is connected to the next and previous in a circle.
-    """
+    
     def __init__(self):
         self.head_clock = None
         self.clock_count = 0
     
     def add_clock(self, city_name, timezone_str, image_filename):
-        """Add a new clock to the circular list"""
         new_clock = ClockNode(city_name, timezone_str, image_filename)
         
         if self.head_clock is None:
@@ -112,7 +105,6 @@ class CircularClockList:
         self.clock_count += 1
     
     def get_all_clocks_data(self):
-        """Traverse the circular list and get data from all clocks"""
         if self.head_clock is None:
             return []
         
@@ -126,7 +118,6 @@ class CircularClockList:
         return clocks_data
     
     def get_dominant_theme(self):
-        """Determine if interface should be day or night based on majority"""
         if self.head_clock is None:
             return 'day'
         
@@ -141,7 +132,7 @@ class CircularClockList:
         return 'day' if day_count >= (self.clock_count / 2) else 'night'
     
     def get_clock_at_index(self, index):
-        """Get clock node at specific index in circular list"""
+        
         if self.head_clock is None or index < 0 or index >= self.clock_count:
             return None
         
@@ -152,7 +143,7 @@ class CircularClockList:
         return current_clock
     
     def calculate_time_difference(self, index1, index2):
-        """Calculate time difference between two clocks in the circular list"""
+        
         clock1 = self.get_clock_at_index(index1)
         clock2 = self.get_clock_at_index(index2)
         
@@ -174,7 +165,6 @@ class CircularClockList:
     
     @staticmethod
     def _format_time_difference(hours):
-        """Format time difference in human-readable format"""
         abs_hours = abs(hours)
         whole_hours = int(abs_hours)
         minutes = int((abs_hours - whole_hours) * 60)
@@ -187,10 +177,6 @@ class CircularClockList:
             return f"{whole_hours}h {minutes}m {direction}"
     
     def find_optimal_meeting_time(self, start_hour=9, end_hour=17):
-        """
-        Find optimal meeting times that fall within business hours (9 AM - 5 PM)
-        for all timezones in the circular list
-        """
         if self.head_clock is None:
             return []
         
@@ -229,7 +215,6 @@ class CircularClockList:
         return optimal_times
     
     def get_list_structure(self):
-        """Get the structure of the circular linked list for visualization"""
         if self.head_clock is None:
             return []
         
@@ -274,7 +259,6 @@ def index():
 
 @app.route('/api/clocks')
 def get_clocks():
-    """API endpoint to get all clock data"""
     clocks_data = clock_list.get_all_clocks_data()
     theme = clock_list.get_dominant_theme()
     
@@ -287,7 +271,6 @@ def get_clocks():
 
 @app.route('/api/clock/current')
 def get_current_clock():
-    """Get the current clock being displayed in carousel"""
     global current_clock_index
     
     current_clock = clock_list.get_clock_at_index(current_clock_index)
@@ -308,7 +291,6 @@ def get_current_clock():
 
 @app.route('/api/clock/next')
 def get_next_clock():
-    """Navigate to next clock in circular linked list"""
     global current_clock_index
     
     # Use circular linked list's next pointer
@@ -335,7 +317,6 @@ def get_next_clock():
 
 @app.route('/api/clock/previous')
 def get_previous_clock():
-    """Navigate to previous clock in circular linked list"""
     global current_clock_index
     
     # Use circular linked list's previous pointer
@@ -362,7 +343,6 @@ def get_previous_clock():
 
 @app.route('/api/clock/update-time', methods=['POST'])
 def update_clock_time():
-    """Update the time offset for a specific clock in the circular list"""
     data = request.get_json()
     
     clock_index = data.get('index', current_clock_index)
@@ -389,7 +369,6 @@ def update_clock_time():
 
 @app.route('/api/clock/reset-time', methods=['POST'])
 def reset_clock_time():
-    """Reset the time offset for a specific clock to actual timezone time"""
     data = request.get_json()
     
     clock_index = data.get('index', current_clock_index)
@@ -414,7 +393,6 @@ def reset_clock_time():
 
 @app.route('/api/compare')
 def compare_timezones():
-    """API endpoint to compare two timezones"""
     index1 = request.args.get('clock1', type=int, default=0)
     index2 = request.args.get('clock2', type=int, default=1)
     
@@ -428,7 +406,6 @@ def compare_timezones():
 
 @app.route('/api/meeting-times')
 def get_meeting_times():
-    """API endpoint to find optimal meeting times across all timezones"""
     start_hour = request.args.get('start', type=int, default=9)
     end_hour = request.args.get('end', type=int, default=17)
     
@@ -442,7 +419,6 @@ def get_meeting_times():
 
 @app.route('/api/structure')
 def get_structure():
-    """API endpoint to get the circular linked list structure"""
     structure = clock_list.get_list_structure()
     
     return jsonify({
@@ -454,7 +430,7 @@ def get_structure():
 
 @app.route('/api/convert')
 def convert_time():
-    """API endpoint to convert a specific time between timezones"""
+    """Convert time between different timezones"""
     from_index = request.args.get('from', type=int, default=0)
     to_index = request.args.get('to', type=int, default=1)
     hour = request.args.get('hour', type=int, default=12)
