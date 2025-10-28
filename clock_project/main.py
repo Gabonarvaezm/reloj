@@ -5,9 +5,7 @@ import math
 
 app = Flask(__name__)
 
-# ============================================
-# IMPLEMENTACION DE LISTAS CIRCULARES DOBLES
-# ============================================
+
 
 class ClockNode:
     
@@ -81,6 +79,9 @@ class ClockNode:
         return time.second * 6
 
 
+# ============================================
+# IMPLEMENTACION DE LISTAS CIRCULARES DOBLES
+# ============================================
 class CircularClockList:
     
     def __init__(self):
